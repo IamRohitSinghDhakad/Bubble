@@ -116,7 +116,11 @@ class DetailViewController: UIViewController {
         self.call_AddFavorite_Api(strPost_id: obj?.post_id ?? "")
     }
     @IBAction func btnOnShare(_ sender: Any) {
-        
+        let str = "\(obj?.user_name! ?? "")\n" + "\(obj?.strDescription! ?? "")\n"
+        let description = str
+           let appLink = "https://yourappstorelink.com"  // Replace with your app store link
+           
+           presentShareSheet(description: description, appLink: appLink)
     }
     
     //MARK: - SubVw Button Actions

@@ -307,6 +307,11 @@ extension DashboardViewController : UITableViewDataSource, UITableViewDelegate {
         self.strSelectedIndex = sender.tag
         print("Button pressed-----at Index number------->",sender.tag)
         print(self.arrDashboard[sender.tag].user_name!)
+        let str = "\(self.arrDashboard[sender.tag].user_name!)\n" + "\(self.arrDashboard[sender.tag].strDescription!)\n"
+        let description = str
+           let appLink = "https://yourappstorelink.com"  // Replace with your app store link
+           
+           presentShareSheet(description: description, appLink: appLink)
     }
     
     @objc func btnActionOnMenu(sender: UIButton){
@@ -425,7 +430,7 @@ extension DashboardViewController : UICollectionViewDelegate, UICollectionViewDa
         + (flowLayout.minimumInteritemSpacing * CGFloat(noOfCellsInRow - 1))
         
         let width = (collectionView.bounds.width - totalSpace) / CGFloat(noOfCellsInRow)
-        var height = collectionView.bounds.height
+        let height = collectionView.bounds.height
         
         return CGSize(width: width, height: height)
     }

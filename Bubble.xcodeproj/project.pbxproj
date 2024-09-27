@@ -63,6 +63,9 @@
 		0AE37B042C9AC979005B0DAD /* DashboardTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0AE37B022C9AC979005B0DAD /* DashboardTableViewCell.xib */; };
 		0AEBE3482C98A72000F18898 /* ForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AEBE3472C98A72000F18898 /* ForgotPasswordViewController.swift */; };
 		27F0E65B51B1DBA093998B6B /* Pods_Bubble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59123520660621D1FCED8CDE /* Pods_Bubble.framework */; };
+		F9B9F4542CA72D570092F0C5 /* RatingTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9B9F4532CA72D570092F0C5 /* RatingTableViewCell.xib */; };
+		F9B9F4552CA72D570092F0C5 /* RatingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9B9F4522CA72D570092F0C5 /* RatingTableViewCell.swift */; };
+		F9B9F4572CA737800092F0C5 /* RatingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9B9F4562CA737800092F0C5 /* RatingModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -126,6 +129,9 @@
 		1C31596018386815F3BC7C83 /* Pods-Bubble.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bubble.release.xcconfig"; path = "Target Support Files/Pods-Bubble/Pods-Bubble.release.xcconfig"; sourceTree = "<group>"; };
 		59123520660621D1FCED8CDE /* Pods_Bubble.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Bubble.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A42CC6A1D0BA8038B0C908F /* Pods-Bubble.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bubble.debug.xcconfig"; path = "Target Support Files/Pods-Bubble/Pods-Bubble.debug.xcconfig"; sourceTree = "<group>"; };
+		F9B9F4522CA72D570092F0C5 /* RatingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingTableViewCell.swift; sourceTree = "<group>"; };
+		F9B9F4532CA72D570092F0C5 /* RatingTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RatingTableViewCell.xib; sourceTree = "<group>"; };
+		F9B9F4562CA737800092F0C5 /* RatingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,6 +153,8 @@
 				0A715F912CA41E5A000E6D7E /* EditProfileViewController.swift */,
 				0A715F932CA48242000E6D7E /* ProfilePostTableViewCell.swift */,
 				0A715F942CA48242000E6D7E /* ProfilePostTableViewCell.xib */,
+				F9B9F4522CA72D570092F0C5 /* RatingTableViewCell.swift */,
+				F9B9F4532CA72D570092F0C5 /* RatingTableViewCell.xib */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -225,6 +233,7 @@
 				0A67208F2C98990900443617 /* LoginModel.swift */,
 				0A6720932C98990900443617 /* UserModel.swift */,
 				0A715FA42CA48F71000E6D7E /* NotificationModel.swift */,
+				F9B9F4562CA737800092F0C5 /* RatingModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -408,6 +417,7 @@
 				0ACEE2802C97EF920093ED3B /* Base in Resources */,
 				0ACEE27B2C97EF900093ED3B /* Base in Resources */,
 				0AE37B042C9AC979005B0DAD /* DashboardTableViewCell.xib in Resources */,
+				F9B9F4542CA72D570092F0C5 /* RatingTableViewCell.xib in Resources */,
 				0A715F9F2CA483BC000E6D7E /* LocationPicker.storyboard in Resources */,
 				0AB88A092C99FAFB004CCFD5 /* DashboardCollectionViewCell.xib in Resources */,
 				0A715F962CA48242000E6D7E /* ProfilePostTableViewCell.xib in Resources */,
@@ -463,6 +473,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F9B9F4552CA72D570092F0C5 /* RatingTableViewCell.swift in Sources */,
 				0AB88A0C2C99FD57004CCFD5 /* TabBarViewController.swift in Sources */,
 				0A715FA02CA483BC000E6D7E /* LocationPickerViewController.swift in Sources */,
 				0A6720AF2C989BCB00443617 /* LoginViewController.swift in Sources */,
@@ -480,6 +491,7 @@
 				0AE37B032C9AC979005B0DAD /* DashboardTableViewCell.swift in Sources */,
 				0AB88A052C99FADE004CCFD5 /* DashboardViewController.swift in Sources */,
 				0ACEE2782C97EF900093ED3B /* ViewController.swift in Sources */,
+				F9B9F4572CA737800092F0C5 /* RatingModel.swift in Sources */,
 				0AA2A49C2CA2B27000EAFB92 /* MyFavoriteTableViewCell.swift in Sources */,
 				0AEBE3482C98A72000F18898 /* ForgotPasswordViewController.swift in Sources */,
 				0A67209F2C98990900443617 /* TableViewExtension.swift in Sources */,
@@ -661,7 +673,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 9M4J6GWM35;
+				DEVELOPMENT_TEAM = QQG625577S;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Bubble/Info.plist;
@@ -699,7 +711,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 9M4J6GWM35;
+				DEVELOPMENT_TEAM = QQG625577S;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Bubble/Info.plist;

@@ -4,11 +4,16 @@
 //
 //  Created by Dhakad, Rohit Singh (Cognizant) on 23/09/24.
 //
+enum DisplayMode {
+    case post
+    case rating
+    case comments
+}
 
 import UIKit
 
 class ProfileViewController: UIViewController {
-
+    
     @IBOutlet weak var tblVw: UITableView!
     @IBOutlet weak var imgvwUser: UIImageView!
     @IBOutlet weak var lblName: UILabel!
@@ -29,28 +34,42 @@ class ProfileViewController: UIViewController {
     var arrComments = [CommentsModel]()
     var objUser : UserModel?
     var arrDashboard = [DashboardModel]()
+    var arrRatings = [RatingModel]()
     var strSelectedIndex = -1
     var isComingFromAddComment = false
+    var currentDisplayMode: DisplayMode = .post
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.call_WsGetProfile()
-        self.call_GetPost_Api()
         let nibTbl = UINib(nibName: "DashboardTableViewCell", bundle: nil)
         self.tblVw.register(nibTbl, forCellReuseIdentifier: "DashboardTableViewCell")
+        
+        let nibRating = UINib(nibName: "RatingTableViewCell", bundle: nil)
+        self.tblVw.register(nibRating, forCellReuseIdentifier: "RatingTableViewCell")
     }
-
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.call_WsGetProfile()
+        self.call_GetPost_Api()
+        self.call_GetRatings_Api()
+    }
+    
     @IBAction func btnOnEditProfile(_ sender: Any) {
         self.pushVc(viewConterlerId: "EditProfileViewController")
     }
     
     @IBAction func btnOnPost(_ sender: Any) {
+        currentDisplayMode = .post
+        self.tblVw.reloadData()
         resetImage()
         self.vwPost.backgroundColor = .white
         self.btnPost.setTitleColor(UIColor(named: "appColor"), for: .normal)
     }
     
     @IBAction func btnOnRatings(_ sender: Any) {
+        currentDisplayMode = .rating
+        self.tblVw.reloadData()
         resetImage()
         self.vwRatings.backgroundColor = .white
         self.btnRatings.setTitleColor(UIColor(named: "appColor"), for: .normal)
@@ -97,38 +116,21 @@ extension ProfileViewController : UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if tableView == self.tblComments{
             return self.arrComments.count
-        }else{
+        }else if currentDisplayMode == .post{
             return self.arrDashboard.count
+        }else{
+            return self.arrRatings.count
         }
         
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        if tableView == self.tblComments{
-            
-            let cell = tableView.dequeueReusableCell(withIdentifier: "CommentsTableViewCell")as! CommentsTableViewCell
-            
-            let obj = self.arrComments[indexPath.row]
-            
-            cell.lblComment.text = obj.comment
-            cell.lblTimeAgo.text = obj.time_ago
-            cell.lblUserName.text = obj.user_name
-            
-            let imageUrl  = obj.user_image
-            if imageUrl != "" {
-                let url = URL(string: imageUrl ?? "")
-                cell.imgVwUser.sd_setImage(with: url, placeholderImage: #imageLiteral(resourceName: "logo"))
-            }else{
-                cell.imgVwUser.image = #imageLiteral(resourceName: "logo")
-            }
-            
-            return cell
-            
-        }else{
-            
+        
+        switch currentDisplayMode {
+        case .post:
             let cell = tableView.dequeueReusableCell(withIdentifier: "DashboardTableViewCell", for: indexPath)as! DashboardTableViewCell
-            
+            cell.lblDistance.isHidden = true
             let obj = self.arrDashboard[indexPath.row]
             cell.lblName.text = obj.user_name
             let imageUrl  = obj.user_image
@@ -167,7 +169,47 @@ extension ProfileViewController : UITableViewDelegate, UITableViewDataSource{
             cell.btnOpenMenu.addTarget(self, action: #selector(btnActionOnMenu(sender:)), for: .touchUpInside)
             
             return cell
+        case .comments:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "CommentsTableViewCell")as! CommentsTableViewCell
+            
+            let obj = self.arrComments[indexPath.row]
+            
+            cell.lblComment.text = obj.comment
+            cell.lblTimeAgo.text = obj.time_ago
+            cell.lblUserName.text = obj.user_name
+            
+            let imageUrl  = obj.user_image
+            if imageUrl != "" {
+                let url = URL(string: imageUrl ?? "")
+                cell.imgVwUser.sd_setImage(with: url, placeholderImage: #imageLiteral(resourceName: "logo"))
+            }else{
+                cell.imgVwUser.image = #imageLiteral(resourceName: "logo")
+            }
+            
+            return cell
+        case.rating:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "RatingTableViewCell", for: indexPath)as! RatingTableViewCell
+            
+            let obj = self.arrRatings[indexPath.row]
+            
+            
+            let imageUrl  = obj.user_image
+            if imageUrl != "" {
+                let url = URL(string: imageUrl ?? "")
+                cell.imgVwUser.sd_setImage(with: url, placeholderImage: #imageLiteral(resourceName: "logo"))
+            }else{
+                cell.imgVwUser.image = #imageLiteral(resourceName: "logo")
+            }
+            
+            cell.lblRatinGComment.text = obj.review
+            cell.vwRating.rating = 5
+            
+            
+            return cell
         }
+        
+        return UITableViewCell()
+        
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -205,8 +247,11 @@ extension ProfileViewController : UITableViewDelegate, UITableViewDataSource{
     
     @objc func btnActionOnShare(sender: UIButton){
         self.strSelectedIndex = sender.tag
-        print("Button pressed-----at Index number------->",sender.tag)
-        print(self.arrDashboard[sender.tag].user_name!)
+        let str = "\(self.arrDashboard[sender.tag].user_name!)\n" + "\(self.arrDashboard[sender.tag].strDescription!)\n"
+        let description = str
+        let appLink = "https://yourappstorelink.com"  // Replace with your app store link
+        
+        presentShareSheet(description: description, appLink: appLink)
     }
     
     @objc func btnActionOnMenu(sender: UIButton){
@@ -270,8 +315,8 @@ extension ProfileViewController{
         
         dicrParam = ["user_id":objAppShareData.UserDetail.strUser_id,
                      "login_user_id":objAppShareData.UserDetail.strUser_id]as [String:Any]
-            
-            url = WsUrl.url_getUserProfile
+        
+        url = WsUrl.url_getUserProfile
         
         
         print(dicrParam)
@@ -616,7 +661,56 @@ extension ProfileViewController{
             objWebServiceManager.hideIndicator()
         }
     }
-
+    
+    //MARK: Get ratings
+    func call_GetRatings_Api(){
+        
+        if !objWebServiceManager.isNetworkAvailable(){
+            objWebServiceManager.hideIndicator()
+            objAlert.showAlert(message: "No Internet Connection", title: "Alert", controller: self)
+            return
+        }
+        
+        objWebServiceManager.showIndicator()
+        
+        let dicrParam = ["user_id":objAppShareData.UserDetail.strUser_id]as [String:Any]
+        
+        objWebServiceManager.requestPost(strURL: WsUrl.url_GetRatings, queryParams: [:], params: dicrParam, strCustomValidation: "", showIndicator: false) { (response) in
+            objWebServiceManager.hideIndicator()
+            
+            let status = (response["status"] as? Int)
+            let message = (response["message"] as? String)
+            print(response)
+            
+            if status == MessageConstant.k_StatusCode{
+                if let user_details  = response["result"] as? [[String:Any]] {
+                    self.arrRatings.removeAll()
+                    for data in user_details{
+                        let obj = RatingModel.init(from: data)
+                        self.arrRatings.append(obj)
+                    }
+                    self.tblVw.reloadData()
+                    
+                }
+                else {
+                    objAlert.showAlert(message: "Something went wrong!", title: "", controller: self)
+                }
+            }else{
+                objWebServiceManager.hideIndicator()
+                if let msgg = response["result"]as? String{
+                    objAlert.showAlert(message: msgg, title: "", controller: self)
+                }else{
+                    objAlert.showAlert(message: message ?? "", title: "", controller: self)
+                }
+            }
+            
+            
+        } failure: { (Error) in
+            //  print(Error)
+            objWebServiceManager.hideIndicator()
+        }
+    }
+    
 }
 
 extension ProfileViewController{

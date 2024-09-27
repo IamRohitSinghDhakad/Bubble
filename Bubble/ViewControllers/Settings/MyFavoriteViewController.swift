@@ -40,7 +40,7 @@ extension MyFavoriteViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MyFavoriteTableViewCell", for: indexPath) as! MyFavoriteTableViewCell
-        
+        cell.lblDistance.isHidden = true
         let obj = self.arrDashboard[indexPath.row]
         cell.lblName.text = obj.user_name
         let imageUrl  = obj.user_image

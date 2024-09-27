@@ -29,19 +29,21 @@ struct WsUrl{
     static let url_GetFavorite = BASE_URL + "get_favorite"
     static let url_DeletePost = BASE_URL + "delete_post"
     static let url_AddFavorite = BASE_URL + "add_favorite"
+    static let url_GetRatings = BASE_URL + "get_ratings"
+    static let url_UpdateProfile = BASE_URL + "update_profile"
     
     
     
     static let url_ChangePassword = BASE_URL + "change_password"
     static let url_ContactUs = BASE_URL + "contact_us"
-    static let url_GetCountry = BASE_URL + "get_country"
+    
    
 
     static let url_DeleteNotification = BASE_URL + "delete_notification"
 
     static let url_InsertChat = BASE_URL + "insert_chat"
     static let url_GetChat = BASE_URL + "get_chat"
-    static let url_UpdateProfile = BASE_URL + "update_profile"
+ 
     static let url_ReportUser = BASE_URL + "report_user"
     static let url_BlockUser = BASE_URL + "block_user?"
     static let url_DeleteAccunt = BASE_URL + "delete_user?user_id="

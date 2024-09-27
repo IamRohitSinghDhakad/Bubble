@@ -529,3 +529,24 @@ extension UITextField{
         }
     }
 }
+
+
+extension UIViewController {
+
+    func presentShareSheet(description: String, appLink: String) {
+        // Combine the description and app link to share
+        let textToShare = "\(description)\n\nDownload the app here: \(appLink)"
+        
+        // Create an array of items to share
+        let itemsToShare = [textToShare]
+        
+        // Create the share sheet (UIActivityViewController)
+        let activityViewController = UIActivityViewController(activityItems: itemsToShare, applicationActivities: nil)
+        
+        // Exclude some activities if you don't want them
+        activityViewController.excludedActivityTypes = [.addToReadingList, .assignToContact]
+        
+        // Present the share sheet
+        self.present(activityViewController, animated: true, completion: nil)
+    }
+}
