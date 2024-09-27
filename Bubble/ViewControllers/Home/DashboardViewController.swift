@@ -283,21 +283,24 @@ extension DashboardViewController : UITableViewDataSource, UITableViewDelegate {
         self.call_GetComments_Api(strPostId: self.arrDashboard[sender.tag].post_id ?? "")
         print("Button pressed-----at Index number------->",sender.tag)
         print(self.arrDashboard[sender.tag].user_name!)
-        
-        
     }
     
     @objc func btnActionOnMeter(sender: UIButton){
         self.strSelectedIndex = sender.tag
         print("Button pressed-----at Index number------->",sender.tag)
         print(self.arrDashboard[sender.tag].user_name!)
-        self.addSubviewVoting(isAdd: true)
+        
+        if self.arrDashboard[sender.tag].voted == "0"{
+            self.addSubviewVoting(isAdd: true)
+        }else{
+            objAlert.showAlert(message: "You already voted this post", controller: self)
+        }
     }
     
     @objc func btnActionOnFav(sender: UIButton){
         self.strSelectedIndex = sender.tag
         print("Button pressed-----at Index number------->",sender.tag)
-        print(self.arrDashboard[sender.tag].user_name!)
+        self.call_AddFavorite_Api(strPost_id: "\(self.arrDashboard[sender.tag].post_id!)")
     }
     
     @objc func btnActionOnShare(sender: UIButton){
@@ -320,7 +323,10 @@ extension DashboardViewController : UITableViewDataSource, UITableViewDelegate {
         
         if userID == objAppShareData.UserDetail.strUser_id{
             alert.addAction(UIAlertAction(title: "Delete Post", style: .default , handler:{ (UIAlertAction)in
-                print("User click Delete button")
+                objAlert.showAlertCallBack(alertLeftBtn: "Yes", alertRightBtn: "No", title: "Delete Alert", message: "Are you sure you want to delete this post?", controller: self) {
+                    self.call_DeletePost_Api(strPost_id: strPostID)
+                }
+                
             }))
         }else{
             alert.addAction(UIAlertAction(title: "Report", style: .default , handler:{ (UIAlertAction)in
@@ -381,13 +387,29 @@ extension DashboardViewController : UICollectionViewDelegate, UICollectionViewDa
         cell.lblDistance.text = distance
         //print("distance==============>>>>>", distance ?? "")
         
+        //Button actions
+        cell.btnOnMsg.tag = indexPath.row
+        cell.btnMeter.tag = indexPath.row
+        cell.btnOnFav.tag = indexPath.row
+        cell.btnOnShare.tag = indexPath.row
+        cell.btnOpenMenu.tag = indexPath.row
+        
+        
+        cell.btnOnMsg.addTarget(self, action: #selector(btnActionOnMessage(sender:)), for: .touchUpInside)
+        cell.btnMeter.addTarget(self, action: #selector(btnActionOnMeter(sender:)), for: .touchUpInside)
+        cell.btnOnFav.addTarget(self, action: #selector(btnActionOnFav(sender:)), for: .touchUpInside)
+        cell.btnOnShare.addTarget(self, action: #selector(btnActionOnShare(sender:)), for: .touchUpInside)
+        cell.btnOpenMenu.addTarget(self, action: #selector(btnActionOnMenu(sender:)), for: .touchUpInside)
+        
         return cell
     }
     
     
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.pushVc(viewConterlerId: "DetailViewController")
+        let vc = self.storyboard?.instantiateViewController(withIdentifier: "DetailViewController")as! DetailViewController
+        vc.obj = self.arrDashboard[indexPath.row]
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     
@@ -609,6 +631,85 @@ extension DashboardViewController {
                 objWebServiceManager.hideIndicator()
                 if let msgg = response["result"]as? String{
                     
+                }else{
+                    objAlert.showAlert(message: message ?? "", title: "", controller: self)
+                }
+            }
+            
+            
+        } failure: { (Error) in
+            //  print(Error)
+            objWebServiceManager.hideIndicator()
+        }
+    }
+    
+    //MARK: - Delete Post API
+    func call_DeletePost_Api(strPost_id:String){
+        
+        if !objWebServiceManager.isNetworkAvailable(){
+            objWebServiceManager.hideIndicator()
+            objAlert.showAlert(message: "No Internet Connection", title: "Alert", controller: self)
+            return
+        }
+        
+        objWebServiceManager.showIndicator()
+        
+        let dicrParam = ["login_user_id":objAppShareData.UserDetail.strUser_id,
+                         "post_id":strPost_id]as [String:Any]
+        
+        objWebServiceManager.requestPost(strURL: WsUrl.url_DeletePost, queryParams: [:], params: dicrParam, strCustomValidation: "", showIndicator: false) { (response) in
+            objWebServiceManager.hideIndicator()
+            
+            let status = (response["status"] as? Int)
+            let message = (response["message"] as? String)
+            print(response)
+            
+            if status == MessageConstant.k_StatusCode{
+                self.call_GetPost_Api()
+            }else{
+                objWebServiceManager.hideIndicator()
+                if let msgg = response["result"]as? String{
+                    self.call_GetPost_Api()
+                }else{
+                    objAlert.showAlert(message: message ?? "", title: "", controller: self)
+                }
+            }
+            
+            
+        } failure: { (Error) in
+            //  print(Error)
+            objWebServiceManager.hideIndicator()
+        }
+    }
+    
+    
+    //MARK: - Add Favorite API
+    func call_AddFavorite_Api(strPost_id:String){
+        
+        if !objWebServiceManager.isNetworkAvailable(){
+            objWebServiceManager.hideIndicator()
+            objAlert.showAlert(message: "No Internet Connection", title: "Alert", controller: self)
+            return
+        }
+        
+        objWebServiceManager.showIndicator()
+        
+        let dicrParam = ["user_id":objAppShareData.UserDetail.strUser_id,
+                         "post_id":strPost_id]as [String:Any]
+        
+        objWebServiceManager.requestPost(strURL: WsUrl.url_AddFavorite, queryParams: [:], params: dicrParam, strCustomValidation: "", showIndicator: false) { (response) in
+            objWebServiceManager.hideIndicator()
+            
+            let status = (response["status"] as? Int)
+            let message = (response["message"] as? String)
+            print(response)
+            
+            if status == MessageConstant.k_StatusCode{
+                self.call_GetPost_Api()
+            }else{
+                objWebServiceManager.hideIndicator()
+                if let msgg = response["result"]as? String{
+                    self.call_GetPost_Api()
                 }else{
                     objAlert.showAlert(message: message ?? "", title: "", controller: self)
                 }

@@ -43,7 +43,7 @@ class AddPostViewController: UIViewController {
         self.view.endEditing(true)
         let strHastag = "#"+self.tfAddHastag.text!
         self.arrStringHastag.append(strHastag)
-        self.lblHastags.text = "\(self.arrStringHastag.joined(separator: ""))"
+        self.lblHastags.text = "\(self.arrStringHastag.joined(separator: ","))"
         self.tfAddHastag.text = ""
         self.addSubview(isAdd: false)
     }
@@ -147,6 +147,7 @@ extension AddPostViewController{
                     objAlert.showAlert(message: "Post added succesfully", controller: self)
                     self.lblHastags.text = ""
                     self.tfDesc.text = ""
+                    self.arrStringHastag.removeAll()
                     self.view.endEditing(true)
                 }
                 else {

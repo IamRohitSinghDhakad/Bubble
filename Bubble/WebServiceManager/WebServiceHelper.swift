@@ -27,13 +27,16 @@ struct WsUrl{
     static let url_AddPost = BASE_URL + "add_post"
     static let url_GetNotofication = BASE_URL + "get_notifications"
     static let url_GetFavorite = BASE_URL + "get_favorite"
+    static let url_DeletePost = BASE_URL + "delete_post"
+    static let url_AddFavorite = BASE_URL + "add_favorite"
+    
     
     
     static let url_ChangePassword = BASE_URL + "change_password"
     static let url_ContactUs = BASE_URL + "contact_us"
     static let url_GetCountry = BASE_URL + "get_country"
-    static let url_GetMembershipPlans = BASE_URL + "get_plans"
-    static let url_FollowUser = BASE_URL + "follow_user"
+   
+
     static let url_DeleteNotification = BASE_URL + "delete_notification"
 
     static let url_InsertChat = BASE_URL + "insert_chat"
