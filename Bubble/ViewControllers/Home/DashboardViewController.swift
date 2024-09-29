@@ -244,6 +244,12 @@ extension DashboardViewController : UITableViewDataSource, UITableViewDelegate {
                 cell.imgvwBlueTick.isHidden = true
             }
             
+            if obj.favourite == "0"{
+                cell.imgVwFav.image = #imageLiteral(resourceName: "star2")
+            }else{
+                cell.imgVwFav.image = #imageLiteral(resourceName: "star")
+            }
+            
             cell.lblDesciption.text = obj.strDescription
             cell.lblMsgCount.text = obj.total_comment
             cell.lblMeterCount.text = obj.average_rating
@@ -388,6 +394,12 @@ extension DashboardViewController : UICollectionViewDelegate, UICollectionViewDa
         cell.lblMeterCount.text = obj.average_rating
         cell.lblHasTag.text = obj.arrHasTag.joined(separator: "")
         
+        if obj.favourite == "0"{
+            cell.imgVwFav.image = #imageLiteral(resourceName: "star2")
+        }else{
+            cell.imgVwFav.image = #imageLiteral(resourceName: "star")
+        }
+        
         let distance = self.calculateDistanceToDestination(latitudeString: obj.lat ?? "", longitudeString: obj.lng ?? "")
         cell.lblDistance.text = distance
         //print("distance==============>>>>>", distance ?? "")
@@ -457,11 +469,15 @@ extension DashboardViewController {
                          "hashtag":"",
                          "distance":""]as [String:Any]
         
-        objWebServiceManager.requestPost(strURL: WsUrl.url_getPost, queryParams: [:], params: dicrParam, strCustomValidation: "", showIndicator: false) { (response) in
+        let finalUrl = "\(WsUrl.url_getPost)login_user_id=\(objAppShareData.UserDetail.strUser_id)&lat=\(self.strLatitude)&lng=\(self.strLongitude)&hashtag=&distance="
+        
+        objWebServiceManager.requestPost(strURL: finalUrl, queryParams: [:], params: [:], strCustomValidation: "", showIndicator: false) { response in
+
             objWebServiceManager.hideIndicator()
             
             let status = (response["status"] as? Int)
             let message = (response["message"] as? String)
+            
             print(response)
             
             if status == MessageConstant.k_StatusCode{
@@ -471,10 +487,9 @@ extension DashboardViewController {
                         let obj = DashboardModel.init(from: data)
                         self.arrDashboard.append(obj)
                     }
-                    self.arrDashboard = self.arrDashboard.reversed()
-                    self.cvCards.reloadData()
+                   // self.arrDashboard = self.arrDashboard.reversed()
                     self.tblVw.reloadData()
-                    
+                    self.cvCards.reloadData()
                 }
                 else {
                     objAlert.showAlert(message: "Something went wrong!", title: "", controller: self)
@@ -701,6 +716,8 @@ extension DashboardViewController {
         
         let dicrParam = ["user_id":objAppShareData.UserDetail.strUser_id,
                          "post_id":strPost_id]as [String:Any]
+        
+        print(dicrParam)
         
         objWebServiceManager.requestPost(strURL: WsUrl.url_AddFavorite, queryParams: [:], params: dicrParam, strCustomValidation: "", showIndicator: false) { (response) in
             objWebServiceManager.hideIndicator()

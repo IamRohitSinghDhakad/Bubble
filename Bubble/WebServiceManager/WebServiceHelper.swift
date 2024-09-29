@@ -19,7 +19,7 @@ struct WsUrl{
     static let url_SignUp  = BASE_URL + "signup?"
     static let url_getUserProfile  = BASE_URL + "get_profile"
     static let url_Login  = BASE_URL + "login"
-    static let url_getPost = BASE_URL + "get_post"
+    static let url_getPost = BASE_URL + "get_post?"
     static let url_ForgotPassword = BASE_URL + "forgot_password"
     static let url_GetComments = BASE_URL + "get_comment"
     static let url_add_comment = BASE_URL + "add_comment"

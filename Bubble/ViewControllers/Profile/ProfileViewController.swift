@@ -147,6 +147,12 @@ extension ProfileViewController : UITableViewDelegate, UITableViewDataSource{
                 cell.imgvwBlueTick.isHidden = true
             }
             
+            if obj.favourite == "0"{
+                cell.imgVwFav.image = #imageLiteral(resourceName: "star2")
+            }else{
+                cell.imgVwFav.image = #imageLiteral(resourceName: "star")
+            }
+            
             cell.lblDesciption.text = obj.strDescription
             cell.lblMsgCount.text = obj.total_comment
             cell.lblMeterCount.text = obj.average_rating
@@ -387,7 +393,10 @@ extension ProfileViewController{
                          "hashtag":"",
                          "distance":""]as [String:Any]
         
-        objWebServiceManager.requestPost(strURL: WsUrl.url_getPost, queryParams: [:], params: dicrParam, strCustomValidation: "", showIndicator: false) { (response) in
+        let finalUrl = "\(WsUrl.url_getPost)login_user_id=\(objAppShareData.UserDetail.strUser_id)&lat=&lng=&hashtag=&distance="
+        
+        objWebServiceManager.requestPost(strURL: finalUrl, queryParams: [:], params: [:], strCustomValidation: "", showIndicator: false) { response in
+            
             objWebServiceManager.hideIndicator()
             
             let status = (response["status"] as? Int)
